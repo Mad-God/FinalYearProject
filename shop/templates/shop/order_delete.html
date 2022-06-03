@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% load tailwind_filters %} {% block content %}
+<!-- {% csrf_token %} -->
+<form method="POST">
+    <h2>Are u sure u want this deleted?</h2>
+  {% csrf_token %} {{ form|crispy }} <button type="submit">Submit</button>
+</form>
+</style>
+<h3>{{msg}}</h3>
+{% endblock content %}

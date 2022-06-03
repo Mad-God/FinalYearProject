@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<head>
+    <style>
+        .center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+
+<div class="center">
+    {% comment %} <form action = "{% url 'success-payment' %}" method = "POST">
+        <button type = "submit" id="rzp-button1">Pay</button>
+    </form>
+    
+    
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+    var options = {
+        "key": "rzp_test_0ovBWEVK2aFRht", // Enter the Key ID generated from the Dashboard
+        "amount": "{% widthratio order.id 1 100 %}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "Acme Corp",
+        "description": "Test Transaction",
+        "image": "https://example.com/your_logo",
+        "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 2
+        "callback_url": "{% url 'success-payment' %}",
+        "handler": function (response){
+            alert(response.razorpay_payment_id);
+            alert(response.razorpay_order_id);
+            alert(response.razorpay_signature)
+            {{order.order_id}} = response.razorpay_order_id
+        },
+        "prefill": {
+            "name": "Gaurav Kumar",
+            "email": "gaurav.kumar@example.com",
+            "contact": "9999999999"
+        },
+        "notes": {
+            "address": "Razorpay Corporate Office"
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+    });
+    document.getElementById('rzp-button1').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+    </script> {% endcomment %}
+    <form id = "form1" class="text-center border border-light p-5" action="{% url 'payment' pk=32 %}" method="POST">
+        {% csrf_token %}
+
+        <p class="h3 mb-3"><i class="fas fa-coffee"></i>Pay to {{order.shop}} Rs. {{order.price}}  {{payment}} </p>
+        <script src="https://checkout.razorpay.com/v1/checkout.js" 
+            data-key="rzp_test_0ovBWEVK2aFRht"
+            data-amount="{% widthratio order.id 1 100 %}"
+            data-currency="INR" 
+            data-order_id="{{order.id}}"
+            data-buttontext="Pay with Razorpay"
+            data-name="SMART TEST PAYMENT"
+            data-description="Django and Data Science"
+            data-image="https://example.com/your_logo.jpg" 
+            data-prefill.name="{{order.user}}" 
+            data-prefill.email="{{order.user.email}}"
+            data-theme.color="#F37254">
+        </script>
+        <script>
+            $("#form1").submit( function(eventObj) {
+                $("<input />").attr("type", "hidden")
+                    .attr("name", "something")
+                    .attr("value", "something")
+                    .appendTo("#form");
+                return true;
+            });
+        </script>
+    </form>
+</div>
+
+
+</div>
+{% endblock %}

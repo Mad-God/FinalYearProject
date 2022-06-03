@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load tailwind_filters %} {% block content %}
+<h3>
+  <div class="container my-lg-4">
+    <form class="form-inline my-2 my-lg-0" method="POST">
+      {% csrf_token %} <input class "form-control" type = "search" placeholder =
+      " search a location" name = "address">
+      <button type="submit">Submit</button>
+    </form>
+    {{m|safe}}
+  </div>
+</h3>
+{% endblock content %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %} {% load tailwind_filters %}{% block content %}
+<a href = "{% url "base:home" %}">
+    <h1 class = "text-3xl font-bold justify-center text-black-300 uppercase text-underline bg-gray-100 px-3 py-3 hover:shadow-lg" style="border-radius:0 0 40px 40px; width:100%; font-family: 'Nunito', sans-serif; transition:0.5s">
+        Click here to go back
+    </h1>
+</a>
+<br>
+<br>
+<br>
+<h1 class = "text-5xl font-bold justify-center text-black-300 uppercase text-underline bg-gray-100 px-3 py-3 hover:shadow-lg" style="border-radius:0 0 40px 40px; width:100%; font-family: 'Nunito', sans-serif; transition:0.5s">
+  Re-enter your credentials to confirm your identity:
+</h1>
+<!-- {% csrf_token %} -->
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %} {{ form|crispy }} <button type="submit">Submit</button>
+</form>
+<h3>{{msg}}</h3>
+{% endblock content %}

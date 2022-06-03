@@ -1,0 +1,104 @@
+{% extends "base.html" %}{% load tailwind_filters %} {% block content %}
+{{lab}}
+
+<!-- component -->
+<style>
+    body {
+      background: #e2e8f0;
+    }
+      *:hover {
+        transition: all 150ms ease-in;
+      }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind&family=Nunito&display=swap" rel="stylesheet">
+    <div class="antialiased ma  x-w-6xl mx-auto my-12 bg-gray-300"  style="border-radius:0 0 90px 90px">
+    <h1 class = "text-5xl justify-center text-black-300 uppercase text-underline bg-gray-100 px-3 py-3 hover:shadow-lg" style="border-radius:0 0 40px 40px; width:100%; font-family: 'Nunito', sans-serif;padding-left:40%; transition:0.5s" >{{shop.name}}</h1>
+      
+    
+      <div class="relative block md:flex items-center" style="margin:20px">
+        <div class="w-full md:w-1/2 relative z-1 bg-gray-100 rounded shadow-lg overflow-hidden">
+          {% comment %} <div class="text-lg font-medium text-green-500 uppercase p-8 text-center border-b border-gray-200 tracking-wide">Pay as you go</div> {% endcomment %}
+          <img
+            alt="ecommerce"
+            class="object-cover object-center w-full h-full block"
+            src="/{{shop.pfp}}"
+            height = "100px"
+          />
+          <div class="block sm:flex md:block lg:flex items-center justify-center">
+            <div class="mt-8 sm:m-8 md:m-0 md:mt-8 lg:m-8 text-center">
+              <div class="inline-flex items-center">
+                <span class="text-3xl font-medium">{{order_num}}</span>
+              </div>
+              <span class="block text-sm text-gray-600 mt-2">Total Orders</span>
+            </div>
+            <div class="mt-4 mb-8 sm:m-8 md:m-0 md:mt-4 md:mb-8 lg:m-8 text-center">
+              <div class="inline-flex items-center">
+                <span class="text-3xl font-medium">₹ {{total_sales}}</span>
+              </div>
+              <span class="block text-sm text-gray-600 mt-2">Total Sales</span>
+            </div>
+          </div>
+          <div class="flex justify-center mt-3 py-4">
+            
+            <ul>
+              <li class="flex items-center">
+                <div class="bg-green-200 rounded-full p-2 fill-current text-green-700">
+                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon-umbrella"><path class="primary" d="M11 3.05V2a1 1 0 0 1 2 0v1.05A10 10 0 0 1 22 13c0 1.33-2 1.33-2 0a2 2 0 1 0-4 0c0 1.33-2 1.33-2 0a2 2 0 1 0-4 0c0 1.33-2 1.33-2 0a2 2 0 1 0-4 0c0 1.33-2 1.33-2 0a10 10 0 0 1 9-9.95z"/><path class="secondary" d="M11 14a1 1 0 0 1 2 0v5a3 3 0 0 1-6 0 1 1 0 0 1 2 0 1 1 0 0 0 2 0v-5z"/></svg>
+                </div>
+                <span class="text-gray-700 text-lg ml-3"><em>{{shop.products.all.count}}</em> Products in shop</span>
+              </li>
+              <li class="flex items-center mt-3">
+                <div class="bg-green-200 rounded-full p-2 fill-current text-green-700">
+                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon-shopping-bag"><path class="primary" d="M5 8h14a1 1 0 0 1 1 .92l1 12A1 1 0 0 1 20 22H4a1 1 0 0 1-1-1.08l1-12A1 1 0 0 1 5 8z"/><path class="secondary" d="M9 10a1 1 0 0 1-2 0V7a5 5 0 1 1 10 0v3a1 1 0 0 1-2 0V7a3 3 0 0 0-6 0v3z"/></svg>
+                </div>
+                <span class="text-gray-700 text-lg ml-3"><em>{{shop.suppliers.all.count}}</em> Suppliers</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="w-full md:w-1/2 relative z-0 px-8 bg-black-200 md:px-0 md:py-16 px-4" style="padding-left:20px">
+            
+          <h1 class="block flex items-center justify-center p-8 text-4xl bg-gray-400 rounded font-semibold text-gray-800 uppercase mt-16" style="color:White">
+            <span>Update Shop detail</span>
+          </h1>
+          <form method="POST" id="update_form"
+          enctype="multipart/form-data" style="padding-left:20px"
+          >
+            {% csrf_token %} {{ form|crispy }}
+            <button
+              class="flex ml-right text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+              type="submit"
+            >
+              Update
+            </button>
+          </form>
+          <a href = "{% url "shop:confirm-user" %}">
+            <button
+              class="flex ml-right text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded my-4 float-right -my-10"
+              type="submit"
+            >
+              Update Bank Details
+            </button>
+          </a>
+          </div>
+        </div>
+      </div>
+        
+      
+    </div>
+
+
+
+{{cat}}
+
+{{cat.products.all}}
+{{objects_list}} 
+
+<script>
+    phone_f = document.getElementById("phone_field")
+    console.log(phone_f)
+    console.log(typeof(phone_f.value))
+</script>
+{% endblock %}

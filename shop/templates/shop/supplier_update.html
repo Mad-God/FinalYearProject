@@ -1,0 +1,113 @@
+{% extends "base.html" %}{% load tailwind_filters %} {% block content %}
+
+<section class="text-gray-600 body-font overflow-hidden">
+  <div class="container px-5 py-24" style="background-color:#fffff1; display:flex">
+    <div class="lg:w-4/5 mx-auto flex flex-wrap">
+      <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+        <a href="{% url 'shop:suppliers' pk=request.user.shop.id %}">
+          <button class="flex ml-right text-white bg-red-500 border-0 py-1 px-3 focus:outline-none hover:bg-red-800 rounded">
+            <h2 class="text-sm title-font text-White-500 tracking-widest">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+              
+            </h2>
+          </button>
+        </a>
+        <h1 class="text-gray-700 text-3xl title-font font-medium mb-1">
+          Name: {{supplier}}
+        </h1>
+
+        <h3 class="text-gray-600 text-2xl font-medium mb-1">
+          Number of Items: {{supplier.products.all.count}}
+        </h3>
+        <div class="flex py-6">
+          <form
+            method="POST"
+            enctype="multipart/form-data"
+            id="update_form"
+            action=""
+          >
+            {% csrf_token %} {{ form|crispy}}
+            <button
+              class="flex ml-right text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+              type="submit"
+            >
+              Update Supplier Data
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+
+      
+    
+    {% comment %} the list of supp.products.all {% endcomment %}
+    
+
+    <div class="max-w-7xl mx-auto flex flex-wrap">
+      <span class ="text-4xl font-bold">This supplier provides the following Products:</span>
+      <div class="inline-block min-w-full py-2 align-middle">
+          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 wx-100 md:rounded-lg">
+              <table class="min-w-full divide-y divide-gray-300">
+                  <thead class="bg-gray-50">
+                      <tr>
+                          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">#</th>
+                          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Product</th>
+                          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Currently In-stock</th>
+                          <th scope="col" class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">Price</th>
+                          <th scope="col" class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">Update</th>
+                          
+                      </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-200 bg-white">
+                    {% for prod in supplier.products.all %}
+                      <a href="{% url 'shop:product_update' prod.id %}">
+                      <tr>
+                        <a href="{% url 'shop:product_update' prod.id %}">
+                          <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-semibold text-gray-900 sm:pl-6">1</td>
+                        <a href="{% url 'shop:product_update' prod.id %}">
+                          <td class="whitespace-nowrap px-4 py-4 text-sm text-gray-500">{{prod.name}}</td>
+                        </a>
+                        <a href="{% url 'shop:product_update' prod.id %}">
+                          <td class="whitespace-nowrap px-4 py-4 text-sm">
+                              {{prod.stock}}
+                          </td>
+                        </a>
+                          <a href="{% url 'shop:product_update' prod.id %}">
+                          <td class="whitespace-nowrap px-4 py-4 text-sm">
+                              <t/>{{prod.price}}
+                          </td>
+                        </a>
+                        <td class="whitespace-nowrap px-5 py-4 text-sm">
+                        <a href="{% url 'shop:product_update' prod.id %}"><span class = "text-blue-500 font-bold">view</span></a>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+              </table>
+          </div>
+      </div>
+    </div>
+    {% comment %} <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js" defer></script> {% endcomment %}
+
+
+    {% comment %} product list ends {% endcomment %}
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+  </div>
+</section>
+
+{% endblock content %}

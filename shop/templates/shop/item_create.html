@@ -1,0 +1,84 @@
+{% extends "base.html" %}{% load tailwind_filters %} {% block content %}
+
+<section class="text-gray-600 body-font overflow-hidden">
+  <div class="container px-5 py-24 mx-auto">
+    <div class="lg:w-4/5 mx-auto flex flex-wrap">
+      <img
+        alt="ecommerce"
+        class="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded"
+        src="/{{prod.img}}"
+      />
+      <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+        <a href="{% url 'shop:home' pk=prod.shop.id cat=0 %}">
+          <h2 class="text-sm title-font text-gray-500 tracking-widest">
+            Go back to products in {{prod.shop}}
+          </h2>
+        </a>
+        <h1 class="text-gray-700 text-3xl title-font font-medium mb-1">
+          Name: {{prod.name}}
+        </h1>
+        <h3 class="text-gray-600 text-2xl font-medium mb-1">
+          Quantity: {{prod.stock}}
+        </h3>
+        <h3 class="text-gray-600 text-2xl font-medium mb-1">
+          Price: {{prod.price}}
+        </h3>
+        <h3 class="text-gray-600 text-2xl font-medium mb-1">
+          Categories: {{categories}}
+        </h3>
+        {% if request.user == prod.shop.user %}
+        <div class="flex py-6">
+          <form method="POST" id="update_form"
+          enctype="multipart/form-data"
+          >
+            {% csrf_token %} {{ form|crispy }}
+            <button
+              class="flex ml-right text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+              type="submit"
+            >
+              Update
+            </button>
+          </form>
+        </div>
+        {% else %}
+
+        <a href="{% url 'shop:product_compare' pk=prod.id %}">
+          <h1 class = "truncate font-bold text-5md bg-gray-300 underline margin-4 px-4 text-right">
+            Compare with other shops
+          </h1>
+        </a>
+        <br>
+        <hr>
+        <h1 class = "truncate font-bold text-4xl bg-gray-200 margin-4 px-4">Add to cart:</h1>
+          <!-- {% csrf_token %} -->
+          <form method="POST">
+            {% csrf_token %} {{ form|crispy }} 
+            <button type="submit" class = "justify-center ml-right text-white bg-green-400 border-y-200 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
+              Submit
+            </button>
+          </form>
+          {% comment %} <a href="{% url 'shop:item-delete' item.id %}">Delete {{item}}</a> {% endcomment %}
+          <h3>{{msg}}</h3>
+
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+<script type="text/javascript">
+  $(document).on('submit', '#update_form',(function (e) {
+      e.preventDefault();
+      $.ajax({ // create an AJAX call...
+        data: $(this).serialize(), // get the form data
+        type: $(this).attr('method'), // GET or POST
+        url: $(this).attr('action'), // the file to call
+        success: function(response) { // on success..
+            $('#success_div').html(response); // update the DIV
+        },
+        error: function(e, x, r) { // on error..
+            $('#error_div').html(e); // update the DIV
+        }
+    });
+  });
+</script>
+{% endblock content %}

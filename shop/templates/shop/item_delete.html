@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% load tailwind_filters %} {% block content %}
+<!-- {% csrf_token %} -->
+<form method="POST">
+  <h2 class = "text-3xl font-bold justify-center text-black-300 uppercase text-underline bg-gray-100 px-3 py-3 hover:shadow-lg" style="width:100%; font-family: 'Nunito', sans-serif;">
+    Are u sure u want this item deleted?
+    <br>
+    <strong>{{item}}</strong>
+  </h2>
+  {% csrf_token %} {{ form|crispy }} 
+  <button type="submit" class = "justify-center  ml-right text-white bg-red-600 border-y-200 py-2 px-6 focus:outline-none hover:bg-red-700 rounded">
+    Submit
+  </button>
+</form> 
+</style>
+<h3>{{msg}}</h3>
+{% endblock content %}

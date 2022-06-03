@@ -1,0 +1,71 @@
+{% extends "base.html" %} {% load tailwind_filters %}{% block content %}
+<div class="w-full max-w-screen-xl mx-auto px-6">
+  <div class="bg-yellow-200 rounded-lg px-5 py-4 mb-4">
+    <h1 class="text-5xl font-black font-mono" style = "font-family:Arial; font-weight:300;">Items in Your Cart</h1>
+  </div>
+  <div class="flex justify-center p-4 px-3 py-10">
+    <div class="w-full inline-flex" style = "flex-wrap:wrap">
+      {% for shop in shops %}
+      <div
+        class="bg-white max-w-md shadow-md rounded-lg px-3 py-2 mb-4"
+        style="margin-left: 40px; height:fit-content; width:30%"
+      >
+        <div
+          class="block text-gray-700 text-lg font-semibold py-2 px-2"
+          style="font-size: 28px; font-weight: bold; postion: relative"
+        >
+          Items from store: {{shop}}
+        </div>
+        {% for item in items %} {% if item.product.shop == shop %}
+        <a href="{% url 'shop:item-update' item.id %}">
+          <div class="py-3 text-sm">
+            <div
+              class="flex justify-start cursor-pointer text-gray-700 hover:text-blue-400 hover:bg-blue-100 rounded-md px-2 py-2 my-2"
+            >
+              <span class="bg-gray-400 h-2 w-2 m-2 rounded-full"></span>
+              <div
+                class="flex-grow font-medium px-2"
+                style="font-size: 18px; font-weight: bold"
+              >
+                {{item.product}}
+                <span
+                  class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-indigo-500 bg-yellow-200 rounded-full"
+                  style="margin-left: 20px; font-size: 18px; word-wrap:break-word; display:block;"
+                >
+                  {{item.quantity}} Units @ ₹{{item.product.price}}</span
+                >
+              </div>
+
+              <div
+                class="text-sm font-normal text-gray-500 tracking-wide"
+                style="margin-left: 70px; font-size: 18px;"
+              >
+                {% widthratio item.product.price 1 item.quantity %}
+              </div>
+            </div>
+          </div>
+        </a>
+        {% endif %} {% endfor %}
+        <div
+          class="flex max-w-md bg-gray-200 text-sm text-left py-2 px-3 -mx-3 -mb-2 rounded-b-lg"
+          style="postion: absolute; bottom: 0"
+        >
+          {% for sh,tot in total.items %} {% if sh == shop.id %} Total :
+          ₹{{tot}} {% else %} {% endif %} {% endfor %}
+        </div>
+        <div id = "aksjndsakjn"
+          class="flexblock max-w-md bg-gray-200 text-sm text-right py-2 px-3 -mx-3 -mb-2 rounded-b-lg">
+          <a href="{% url 'checkout' shop.id %}">
+            <button
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              CheckOut
+            </button>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{{msg}}{% endblock content %}

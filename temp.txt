@@ -1,0 +1,59 @@
+Documentation:
+    Intro, req analy, project desc, feasibility, requirements, methodology, soft hw req, sys design, 
+    project module, gantt chart, data dictionary, inp op screenshot, dfd 3 level, data model, code, implementation, 
+    implementation and maintenance, sys sec measure, cost analysis, cost estimation, future scope, limitations, imporvements,
+    glossary, bibliography.
+
+
+
+UI:
+    done: Order detail view payment link in customer view
+    done: pop over shop detail view link on shop homepage for customer
+    done: order create form and payment page UI
+    done: order create toggle buttons
+    done: footer link for new shop.
+
+
+
+Functioning:
+    done: shop create view
+    done: individual payment for each shop using normal fields
+    done: change bank details login required view
+    handle IntegrityConstraint Error in many-to-many for supplier and product relation. Also update on the ER diag
+    done: unique name for product, category, supplier in shops
+    done: search function on home page  
+    done: supplier queryset when updating products
+
+
+
+
+
+ER Diagram:
+    entities:
+        user
+
+        item
+        cart
+        
+        orderitem
+        order
+        
+        shop
+        owner
+        slide
+
+
+        product
+        categories
+        suppliers
+
+
+
+dfd:
+    level 0:
+        cust -> site -> <- shop
+
+    level 1:
+        cust -all inputs--> site -- all inputs--> shop
+
+

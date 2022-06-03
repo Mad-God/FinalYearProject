@@ -1,0 +1,42 @@
+{% extends "base.html" %}{% load tailwind_filters %} {% block content %}
+
+<div class="max-w-7xl mx-auto flex flex-wrap">
+    <span class ="text-3xl text-bold">The <em>{{cat}}</em> category has the following Products:</span>
+    <div class="inline-block min-w-full py-2 align-middle">
+        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 wx-100 md:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-300">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">#</th>
+                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Product</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Currently In-stock</th>
+                        <th scope="col" class="px-3 py-3.5 text-center text-sm font-semibold text-gray-900">Price</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 bg-white">
+                  {% for prod in cat.products.all %}
+                  
+                    <tr>
+                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-semibold text-gray-900 sm:pl-6">1</td>
+                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{prod.name}}</td>
+                        <td class="whitespace-nowrap px-3 py-4 text-sm">
+                            {{prod.stock}}
+                        </td>
+                        <td class="whitespace-nowrap px-3 py-4 text-sm">
+                            {% comment %} <span class="flex justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                </svg>
+                            </span> {% endcomment %}
+                            <t/>{{prod.price}}
+                        </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}{% load tailwind_filters %}{% block content %}
+<section style="background-color:#fffff1; display:flex; width:100%; height:100%;">
+  <div class = "flex flex-wrap">
+  <div class = "flex flex-wrap" style="diplay:block">
+    {% if request.user.shop %}
+    <a href="{% url 'shop:home' pk=request.user.shop.id cat=0 %}"> Back to Shop</a>
+    {% else %}
+    <a href="{% url 'base:home' %}"> Back to Easy-Shop</a>
+    {% endif %}
+  </div>
+  <div class = "max-w-7xl mx-auto lg:w-4/5 mx-auto">
+    {% for sl in slides %}
+    <div><br><h1>{{sl.text}}</h1><img src="/{{sl.img}}" width="300"/> <a href = "{% url 'shop:slide-delete' sl.id %}">Delete</a></div>
+    {% endfor %}
+  </div>
+  </div>
+  <div class="max-w-7xl mx-auto flex px-3 py-3" style = "display:block;">
+    <h1>Add a new Slide</h1>
+    <hr />
+    <div class="inline-block min-w-full py-2 align-middle flex">
+      <form method="POST" id="update_form" 
+      enctype="multipart/form-data"
+      >
+        {% csrf_token %} {{ form|crispy}}
+        <button
+          class="flex ml-right text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+          type="submit"
+        >
+          Add Slide
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+<hr />
+
+{% endblock %}

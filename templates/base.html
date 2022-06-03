@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    {% comment %}
+    <script src="static//prod_list.js"></script>
+    {% endcomment %} {% comment %}
+    <script src="https://unpkg.com/flowbite@1.3.4/dist/flowbite.js"></script>
+
+    {% endcomment %}
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/flowbite@1.3.4/dist/flowbite.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/flowbite@1.3.4/dist/flowbite.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+    />
+    <script src="https://unpkg.com/flowbite@1.3.4/dist/flowbite.js"></script>
+    {% comment %} <script src="./TW-ELEMENTS-PATH/dist/js/index.min.js"></script> {% endcomment %}
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      body {
+        width: 95%;
+        align-self: auto;
+        align-items: center;
+        align-content: center;
+        padding-left: 3%;
+        padding-right: 3%;
+        padding-bottom: 0%;
+        background: #e6e3e3;
+        margin-bottom:50px
+        margin-left:20%;
+        height:100%;
+      }
+      .container {
+        max-width: 50%;
+        border-bottom: 10px;
+      }
+    </style>
+    <title>ShopEasy</title>
+  </head>
+  <body>
+    <div style="display:block; margin-bottom:0px; padding-bottom: 0px">
+      <div>
+        <div class="container" style="display:flex; padding-bottom:20px">
+          <div class="px-0">
+          {% if request.user == shop.user %}
+          {% include "sidebar.html" %}
+          {% comment %} <a href = "{% url 'shop:shop-update' shop.id %}"> Update Shop Details </a> {% endcomment %}
+          
+          {% else %}
+          {% endif %}
+          </div>
+          {% if request.user.shop %}
+          <div class="container px-10" style="width:80%; align:right; margin-left:20%">
+          {% else %}
+          <div class="container">
+          {% endif %}
+
+          {% include "navbar.html" %} 
+          {% block content %} {% endblock content %}
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </body>
+  {% comment %} <script type="text/javascript">
+    console.log("working")
+    var btn_carousel = document.querySelector('#carousel-next-slide-btn')
+    console.log(btn_carousel)
+    btn_carousel.click()
+    setTimeout(btn_carousel.click(),1000);
+  
+  
+  </script> {% endcomment %}
+
+  {% comment %} <script src="themes/js/jquery.js" type="text/javascript"></script>
+  <script src="themes/js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="themes/js/google-code-prettify/prettify.js"></script>
+
+  <script src="themes/js/bootshop.js"></script>
+  <script src="themes/js/jquery.lightbox-0.5.js"></script> {% endcomment %}
+
+
+</html>

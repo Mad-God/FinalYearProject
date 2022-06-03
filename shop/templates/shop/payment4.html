@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+
+{% block content %}{% load tailwind_filters %}
+
+
+<head>
+    <style>
+        .center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        <style>
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 60px;
+                height: 34px;
+              }
+              
+              /* Hide default HTML checkbox */
+              .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+              }
+              
+              /* The slider */
+              .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                -webkit-transition: .4s;
+                transition: .4s;
+              }
+              
+              .slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                -webkit-transition: .4s;
+                transition: .4s;
+              }
+              
+              input:checked + .slider {
+                background-color: #2196F3;
+              }
+              
+              input:focus + .slider {
+                box-shadow: 0 0 1px #2196F3;
+              }
+              
+              input:checked + .slider:before {
+                -webkit-transform: translateX(26px);
+                -ms-transform: translateX(26px);
+                transform: translateX(26px);
+              }
+              
+              /* Rounded sliders */
+              .slider.round {
+                border-radius: 34px;
+              }
+              
+              .slider.round:before {
+                border-radius: 50%;
+              }
+        </style>
+    </style>
+</head>
+
+<div class="center">
+    Paying {{total}} to {{shop}}
+    <form id = "form1" action = "{% url 'success-payment' %}" method = "POST">
+        {% csrf_token %}
+        {{form|crispy}}
+        {% comment %} <label class="switch"> {% endcomment %}
+            <label><strong>Cash on Delivery</strong></label><br>
+            <input name = "cod" id = "rad_btn" type="checkbox" label = "Cash on Delivery" value = "no">
+            {% comment %} <span class="slider round"></span> {% endcomment %}
+          {% comment %} </label> {% endcomment %}
+          <br>
+          <br>
+        <button type = "submit" id = "submit_btn" class="rzp-button1">Pay. ID: {{payment.id}}</button>
+    </form>
+    
+    
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+    var rzp_init = function(e){
+        rzp1.open();
+        e.preventDefault();
+        }
+    var btn = document.getElementById("submit_btn")
+    var cod = document.getElementById("rad_btn")
+    btn.addEventListener("onclick", rzp_init)
+    var myScript = function(event){
+        console.log("asdsdasd")
+        // btn.classList.toggle("rzp-button1")
+        console.log(btn.getAttribute('listener'))
+        if (cod.checked) {
+            console.log("Event listener removed.")
+            btn.removeEventListener("onclick", rzp_init);
+       }
+       else{
+        console.log('event has been attached');
+        btn.addEventListener("onclick", rzp_init)
+       }
+       
+    }
+    cod.addEventListener("change", myScript);
+    var f = document.getElementById("form1")
+
+    var shop = document.createElement("input")
+    shop.type = "hidden"
+    shop.name = "shop"
+    shop.value = {{shop.id}}
+    f.appendChild(shop)
+    
+
+
+    var options = {
+        "key": "rzp_test_0ovBWEVK2aFRht", // Enter the Key ID generated from the Dashboard
+        "amount": "{% widthratio total 1 100 %}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "Acme Corp",
+        "description": "Test Transaction",
+        "image": "https://example.com/your_logo",
+        "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 2
+        //"callback_url": "{% url 'success-payment' %}",
+        "handler": function (response){
+            var f = document.getElementById("form1")
+            var sig = document.createElement("input")
+            sig.type = "hidden"
+            sig.name = "razorpay_signature"
+            sig.value = response.razorpay_signature
+
+            var pid = document.createElement("input")
+            pid.type = "hidden"
+            pid.name = "razorpay_order_id"
+            pid.value = response.razorpay_order_id
+
+
+            var pid2 = document.createElement("input")
+            pid2.type = "hidden"
+            pid2.name = "order_id"
+            pid2.value = "None"
+
+            var oidsig = document.createElement("input")
+            oidsig.type = "hidden"
+            oidsig.name = "razorpay_payment_id"
+            oidsig.value = response.razorpay_payment_id
+
+            
+            //f.appendChild(`<input type="hidden" name="razorpay_signature" value=` + response.razorpay_signature + ` />`);
+            f.appendChild(sig)
+            f.appendChild(pid)
+            f.appendChild(oidsig)
+            f.appendChild(pid2)
+
+
+            alert(response.razorpay_payment_id);
+            alert(response.razorpay_order_id);
+            alert(response.razorpay_signature)
+                
+            f.submit()
+        },
+        "prefill": {
+            "name": "Gaurav Kumar",
+            "email": "gaurav.kumar@example.com",
+            "contact": "9999999999"
+        },
+        "notes": {
+            "address": "Razorpay Corporate Office"
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+    });
+    // document.getElementByClassName('rzp-button1').onclick = function(e){
+    //     rzp1.open();
+    //    e.preventDefault();
+    // }
+    // btn.onclick = function(e){
+    //     rzp1.open();
+    //     e.preventDefault();
+    // }
+    </script>
+</div>
+
+
+</div>
+{% endblock %}

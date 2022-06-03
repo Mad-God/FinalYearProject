@@ -1,0 +1,114 @@
+{% extends "base.html" %} {% load tailwind_filters %}{% block content %}
+<h1 class = "bg-yellow-200 text-4xl font-bold rounded-lg px-5 py-4 mb-4 flex">Confirm Order:</h1>
+<!-- {% csrf_token %} -->
+<form
+    class="text-center border border-light bg-indigo-200 rounded px-4 py-4"
+    style="justify-content:left; text-align:left; width:80%;margin-left:10%;margin-right:10%; padding-left:10%; padding-right:10%; border-radius:20px"
+    method="POST"
+  >
+    
+    {% csrf_token %} {{ form|crispy }} 
+    
+  </br>
+</br>
+</br>
+<button type="submit" class = "justify-center ml-right text-white bg-green-800 border-y-200 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
+  Submit Details
+</button>
+
+
+</form>
+
+<div id="wrapper">
+  {% comment %} <button class = "btn btn-primary" id="location-button">Get User Location</button> {% endcomment %}
+  <br>
+  <br>
+  <br>
+  <div id="output">
+
+  </div>
+</div>
+
+  <h3>{{msg}}</h3>
+  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+  <script>
+    var delivery_toggle = document.getElementById("id_delivery")
+    var payment_toggle = document.getElementById("id_cash_on_pickup")
+    var div_payment_toggle = document.getElementById("div_id_cash_on_pickup")
+    var div_delivery_toggle = document.getElementById("div_id_delivery")
+    var toggles_classes = "form-check-input appearance-none w-9 bg-white bg-no-repeat h-5 focus:outline-none cursor-pointer bg-contain align-top rounded-full ml-20 -my-30"
+
+    toggles_classes = toggles_classes.split(" ")
+    console.log(toggles_classes)
+    for(c in toggles_classes){
+      payment_toggle.classList.add(toggles_classes[c])
+      delivery_toggle.classList.add(toggles_classes[c])
+
+    }
+    div_payment_toggle.classList.add("inline")
+    var br_element = document.createElement("br");
+    div_delivery_toggle.classList.add("inline")
+    div_delivery_toggle.classList.add("center")
+    div_payment_toggle.classList.add("center")
+    div_delivery_toggle.classList.add("w-40")
+    div_payment_toggle.classList.add("w-40")
+    {% comment %} div_delivery_toggle.classList.add("bg-gray-400")
+    div_payment_toggle.classList.add("bg-gray-400") {% endcomment %}
+    div_payment_toggle.style.width = "30px"
+    
+    // function insertAfter(newNode, existingNode) {
+    //  existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
+    // }
+    div_delivery_toggle.appendChild(br_element)
+    div_payment_toggle.appendChild(br_element)
+    div_delivery_toggle.appendChild(br_element)
+    div_payment_toggle.appendChild(br_element)
+    div_delivery_toggle.appendChild(br_element)
+    div_payment_toggle.appendChild(br_element)
+
+    delivery_toggle.appendChild(br_element)
+    delivery_toggle.appendChild(br_element)
+    delivery_toggle.appendChild(br_element)
+    delivery_toggle.appendChild(br_element)
+    delivery_toggle.appendChild(br_element)
+    delivery_toggle.appendChild(br_element)
+    // let menu = document.getElementById('menu');
+    // create a new li node
+    // let li = document.createElement('li');
+    // li.textContent = 'Services';
+    // insertAfter(li,  menu.lastElementChild);
+    // insertAfter(delivery_toggle, br_element)
+
+
+
+    {% comment %} console.alert("Adadssaadad") {% endcomment %}
+    {% comment %} for getting the customer location {% endcomment %}
+    $('#location-button').click(function(){
+      console.log("Adadadsads")
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position){
+            console.log(position.coords);
+            add = document.getElementById("id_address")
+            // $("#id_address").value = position
+            add.value += ",|| coords: " + position.coords.latitude + ", " + position.coords.longitude
+            link_div = document.getElementById("output")
+            link_div.innerHTML = `<a id = "google-maps-address-link" target="_blank" href = "` + `https://www.google.com/maps/search/?api=1&query=${position.coords.latitude},${position.coords.longitude}` + `">See on map</a>`
+            // map_link = document.getElementById("google-maps-address-link")
+            // map_link.innerHTML = "See on map"
+            // map_link.attribute["href"] = `https://www.google.com/maps/search/?api=1&query=${position.coords.latitude},${position.coords.longitude}`
+            
+            // $.get( "http://maps.googleapis.com/maps/api/geocode/json?latlng="+ position.coords.latitude + "," + position.coords.longitude +"&sensor=false", function(data) {
+            //   console.log(data);
+            // })
+            // var img = new Image();
+            // img.src = "https://maps.googleapis.com/maps/api/staticmap?center=" + position.coords.latitude + "," + position.coords.longitude + "&zoom=13&size=800x400&sensor=false";
+            // $('#output').html(img);
+          }, function(){}, {enableHighAccuracy: true});
+          
+      }
+  
+    });
+
+
+  </script>
+{% endblock content %}

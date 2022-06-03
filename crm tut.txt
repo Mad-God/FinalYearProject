@@ -1,0 +1,327 @@
+virtual environment:
+    pip install virtualenv
+    virtualenv env_name
+    source env/bin/activate
+
+
+
+
+django start project, app, migrations, superuser: 
+    django-admin startproject djcrm .
+    python manage.py makemigrations
+    python manage.py migrate
+    python manage.py runserver
+
+    python manage.py startapp app_name
+
+    python manage.py createsuperuser
+
+
+
+
+python shell:
+    python manage.py shell    to activate the shell
+    exit()    to exit the shell
+
+
+
+
+django models:
+    from django.db import models
+
+    django model fields:
+        models.BooleanFiled(deafult = False)
+        src = models.CharField(choices = (('aasd','asdaads'), (asd,asdasd)))
+        pfp = models.ImageField(blank = True, null = True)
+        > blank submits an empty string
+        > null tells that there is no value for this datapoint in the DB
+        file = models.FileField()
+
+
+        relationships:
+            agent = models.ForeignKey(Lead, related_name = "leads",on_delete = models.SET_NULL)
+            > on_delete can be: models.CASCADE (delete the lead when agent is deleted), models.SET_NULL, models.SET_DEFAULT
+
+            > related_name name u give to relationship bw tables to do a reverse lookup
+                Now, we can do a reverse look-up as such:
+                    self.get_object().leads.all()
+
+
+
+    built-in User model:
+        from django.contrib.auth import get_user_model
+        User = get_user_model
+
+        user = model.OneToOneField(User, on_delete = model.CASCADE)
+
+
+        > you should have your own user model, so u can later customize that model when you need to later on
+        from django.contrib.auth.models import AbstractUser
+
+        class User(AbstractUser):
+            pass        
+
+        > once you have your custom user model, you need to tell django about it in settings.py -> AUTH_USER_MODEL = 'leads.User'
+        > usually, we extend this User model from other models which can be used to login to the site, as we did at 13 lines above
+        > If a model's objects are not to be used for logging in (like Leads), then we dont extend the user model there. 
+
+
+
+    queryset and query managers:
+        > Lead.objects is the model manager
+        we have different methods on this model like create(), all(), filter(make = '2018'), 
+        These methods return a queryset.
+        > Lead.objects.filter(year__gt = 2016) to filter year > 2016, use year__lt for year < 2016
+        > Lead.objects.filter(user__email == 'mail@e.mail')   will look for the 'email' field of the foreign 'user' field, 
+                                                                since user is a foreing key field
+        > agent__isnull = True will look for records where agents foreign key value is Null
+
+
+        > .get() method returns a single instance of the model, so the datatype for that value will be the model class
+
+        In the python shell:
+            import the models 
+            Leads.objects.create(field=value ...)
+
+    
+
+    > To handle a new field in the model that can't be null but doesn't have any value in the DB currently ( since it's a new field)
+        Set the field to ahve null and blank, then migrate. Then remove the null and blank, and migrate.
+        You'll see an option to ignore the current records for this value for now, and then you can go to admin yourself,
+        and give these records values by yourself.
+        (At 06: 54: 00 onwards.)
+
+
+    
+
+register models in admin.py:      
+    from django.contrib import admin
+    from .models import models
+    
+    admin.site.register(models)
+
+
+
+
+django views:
+    from django.http import HttpResponse
+
+    path("", home_view)
+
+
+
+
+url in django:
+    from django.urls import path, include
+
+    to go to a particular object's detail using primary key pk:
+        
+        href = "lead/{{lead.pk}}"
+        path("lead", include('lead.urls', namespace = "leads"))    in main urls.py
+        path("<int:pk>", lead_detail, "lead_detail")      in the app's urls.py
+
+        > to do this using {% url %} format, 
+          href = "{% url 'app_name:url_name' object.pk %}"              note that the url_name is the namespace, not the actual url path
+
+
+    urls namespace:
+
+
+
+
+django forms:
+    from django import forms
+
+    class FormName(forms.Form):
+        field_name = form.CharField()
+        ...
+
+    > 'action' attribute in the form tag is used to submit the form to the url specified in this attribute.
+       By default, it the same url as the current one.
+
+    > saving the data recieved through the form:
+        if request.method == "POST":       check if the method is a POST method
+            form = LeadForm(request.POST)       get all data from the form
+            if form.is_valid():           check if all the fields are validated
+                form = form.cleaned_data        take all the cleaned data
+                > now we grab all the data points from this form
+                fname = form["first_name"]
+                ....
+
+                Lead.objects.create(fname = fname, ....)      create the lead in the DB
+
+                return redirect("redirect_url")
+
+
+    > To change a form widget, like suppose you want a checkBox but django is giving dropdown:
+        just overwrite the __init__ method of the form class, in the method, reset the 
+        field widget to whatever you want
+
+django model forms:
+
+
+
+
+class based views:
+    context_object_name      to customize the name of the context passed to the html
+
+    CreateView:
+        get_success_url() is used to redirect the page when a form is submitted successfully
+            return reverse("app_name:url_name")
+            return reverse("app_name:url_name", kwargs = {"pk": self.get_object().id})     to go to that objects detail view
+        
+        form_valid(self, form)     used to do something if the form was valid, i.e, data saved
+            > do anything u like
+            agent = form.save(commit = False)     get the object that was submitted through the form
+            agent.organisation = self.request.user
+            return super(LeadCreatView, self).form_valid(form)
+
+
+    DetailView:
+        self.get_object()           to get the object that we are curently at for our detail view
+                                    can't use this in the get_queryset() causes Recursion limit excess
+ 
+
+        
+static files:
+    STATICFILESDIRS[]   is the list of folders that django will look through for static files
+    
+    when we are in debug mode, we specify a STATIC_ROOT in settings.py that will point to directory that contains static files
+    then we add anothyer path to our projects ulrs.py.
+
+    Now, in our HTML, we first {% load static %}
+    then whenever we need a static file, href = "{% static 'folder_name/file_name' %}"
+    
+
+
+
+Authentication:
+     > for handling login, logout, signup
+     > create registration folder in templates folder
+       create login.html, add the code
+       add the urls path in the project url, by importing the LoginView class
+
+    LOGIN_REDIRECT_URL     used to redirect to a specific url when log in occurs 
+    LOGIN_URL     used to redirect to the custom login url when a mixin is triggered
+
+    {% if request.user.is_authenticated %}    to check if the user is authenticated
+
+
+    > same thing for logout view
+
+    > signup:
+        > you have to create the view, form, template yourself
+        class SignupView(generic.CreateView)           for the view
+            form_class = CustomUserCreationForm
+        
+        from django.contrib.auth.forms import CustomUserCreationForm       for the form
+        class CustomUserCreationForm:
+            class Meta:
+                user = User           this is the main step, we need to specify our own User model, 
+                                        or else django will take default User model, and throw an error
+
+        > add this to the urls of the project 
+    
+
+    auth permissions:    
+        from django.contrib.auth .mixins import LoginRequiredMixin
+ 
+        > pass this as the first argument in the CBVs to extend from, to make sure that they are called first
+
+
+
+
+> Shortcuts
+    agent.organisation = self.request.user           get the current user in create view
+    self.kwargs['pk']              to get the pk passed to the url request
+    queryset.filter(catergory__isnul = True).count()      to count the number of unassigned leads
+
+    self.get_object().lead_set.all()        get all the leads that have the Organisation foreign key set 
+                                            as the current object of the detail view, or u can use related name,
+                                            as shown in the django models section above.
+
+    category.leads.all()            we can do this in the HTMl template, to do the exact same thing that we did above.
+                                    Here, the category is the context name
+
+
+    > To handle a new field in the model that can't be null but doesn't have any value in the DB currently ( since it's a new field)
+        Set the field to ahve null and blank, then migrate. Then remove the null and blank, and migrate.
+        You'll see an option to ignore the current records for this value for now, and then you can go to admin yourself,
+        and give these records values by yourself.
+        (At 06: 54: 00 onwards.)
+
+
+
+
+> mixins
+    > create a mixin.py
+    > import the mixin you want to extend 
+    > define the dispatch function, which takes the self, req, args, kwargs
+        check conditions and return accordingly
+        call the super dispatch method
+
+
+
+
+> querysets
+    > you can reassign them:
+        queryset = Model.objects.all()
+        queryset = queryset.filter(age = 21)
+        > this only makes one query to the database, then filters on it, rather than multiple queries
+
+    queryset.filter(agent__user == self.request.user)     filter the Model on agent field, where user = request user
+
+
+
+
+> get_context_data() method
+    > overwrites the parent method to add more data to the context
+
+    context = super(LeadListView, self).get_context_data(**kwargs)
+
+    context.update(
+        'unassigned_leads': un_lead,
+        ...
+    
+    )
+
+    return context
+
+
+
+
+> form to get all the agents of an organisation inside the form as a list of options to select from 
+    > code in forms.py of leads app, AssignAgentForm(forms.Form)
+    > we first set the queryset as None, then each time the form is created by the server,
+      we take the organisation, and return all the agents of that organisation
+
+    > This organisation is passed expilicitly to form from the ClassView class, where we use 
+      get_form_kwargs(self) method to add another keyword argumet to the form kwargs parameter.
+      In the form, we use .pop method to extract the request keyword added,
+      because django backend will not be expecting this argument
+    
+    > Then we update our queryset for agent ModelChoiceField using this request in the __init__()
+
+
+
+> Cripsy
+    pip install django-Cripsy-forms or something like this
+    add cripsy forms to insatlled apps
+    pip install cripsy-tailwind
+
+    set CRISPY_ALLOWED_TEMPLATE_PACK = 'tailwind' in settings.py
+    set CRISPY_TEMPLATE_PACK = 'tailwind' in settings.py
+
+    > Now to use these forms:
+        {% load tailwind_filters %}
+        {% form | crispy %}
+
+
+
+
+tailwind:
+    > get the link for tailwind cdn
+      put in link rel stylesheet
+
+    > tailblocks for full code for site components
+

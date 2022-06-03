@@ -1,0 +1,72 @@
+{% extends "base.html" %} {% load tailwind_filters %}{% block content %}
+<div class="w-full max-w-screen-xl mx-auto px-6">
+  <div class="bg-yellow-200 rounded-lg px-5 py-4 mb-4">
+    <h1 class="text-5xl font-black font-mono" style = "font-family:Arial; font-weight:300;">Payment to: {{ shop_current}}</h1>
+  </div>
+  <div class="bg-yellow-200 rounded-lg px-5 py-4 mb-4" style:"margin-top:5px">
+  <h1 class="text-5xl font-black font-mono" style = "font-family:Arial; font-weight:300;">Total: ₹{{ total}}</h1>
+</div>
+<div class="flex justify-center p-4 px-3 py-10 bg-white max-w-md shadow-md rounded-lg px-3 py-2 mb-4">
+  <div class="w-full inline-flex">
+    <div
+      class="block text-gray-700 text-lg font-semibold py-2 px-2"
+      style="font-size: 28px; font-weight: bold"
+    >
+      Items: {{shop}}
+    </div>
+    {% for item in object_list %}
+    <div
+      class="block text-gray-700 text-lg font-semibold py-2 px-2"
+      style="font-size: 28px; font-weight: bold"
+    >
+      <a href="{% url 'shop:item-update' item.id %}">
+        <div class="py-3 text-sm">
+          <div
+            class="flex justify-start cursor-pointer text-gray-700 hover:text-blue-400 hover:bg-blue-100 rounded-md px-2 py-2 my-2"
+          >
+            <span class="bg-gray-400 h-2 w-2 m-2 rounded-full"></span>
+            <div
+              class="flex-grow font-medium px-2"
+              style="font-size: 18px; font-weight: bold"
+            >
+              {{item.product}}
+              <span
+                class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-indigo-500 bg-yellow-200 rounded-full"
+                style="margin-left: 20px; font-size: 18px"
+              >
+                {{item.quantity}} Units @ Rs. {{item.product.price}}</span
+              >
+            </div>
+
+            <div
+              class="text-sm font-normal text-gray-500 tracking-wide"
+              style="margin-left: 70px; font-size: 18px; font-weight: bold"
+            >
+              {% widthratio item.product.price 1 item.quantity %}
+            </div>
+          </div>
+        </div>
+      </a>
+      <div>
+        {% endfor %}
+        <div
+          class="block max-w-md bg-gray-200 text-sm text-right py-2 px-3 -mx-3 -mb-2 rounded-b-lg"
+        >
+          {{shop.id}}
+          <a href="{% url 'shop:order-create' shop_current.id %}">
+            <button
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Confirm Order
+            </button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{msg}}{% endblock content %}
+
+
+
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14233.980183334597!2d80.84331375000001!3d26.88777975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399bfe1eb4f1978d%3A0x30bbbe96c52297e2!2sUnity%20PG%20College%20-%20Best%20Private%20PG%20%26%20LAW%20College%20For%20BTC%2C%20BA%2C%20B.Com%2C%20BBA!5e0!3m2!1sen!2sin!4v1652273112369!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>

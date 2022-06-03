@@ -1,0 +1,42 @@
+{% extends "base.html" %}{% load tailwind_filters %} {% block content %}
+{{lab}}
+
+<!-- component -->
+<style>
+    body {
+      background: #e2e8f0;
+    }
+      *:hover {
+        transition: all 150ms ease-in;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind&family=Nunito&display=swap" rel="stylesheet">
+
+
+<div class="antialiased w-full mx-auto my-12 bg-gray-300"  style="border-radius:0 0 90px 90px">
+    <div class="w-full md:w-1/2 relative z-0 py-0 px-8 bg-black-200 md:px-0 md:py-2 px-4" style="padding-left:20px;padding-right:20px; width:auto">
+        
+      <h1 class="bg-gray-700 block flex items-center justify-center my-8 p-8 text-4xl font-semibold text-gray-600 uppercase mt-6" style="color:White;border-radius:0 0 40px 40px">
+        <span>Enter Shop detail</span>
+      </h1>
+      <form method="POST" id="update_form"
+      enctype="multipart/form-data"
+      class = "p-4"
+      >
+        {% csrf_token %} {{ form|crispy }}
+        <button
+          class="flex ml-right text-white bg-indigo-500 m-4 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+          type="submit"
+        >
+          Register Shop
+        </button>
+      </form>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+{% endblock %}

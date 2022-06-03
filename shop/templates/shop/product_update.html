@@ -1,0 +1,125 @@
+{% extends "base.html" %}{% load tailwind_filters %} {% block content %}
+
+<section class="text-gray-600 body-font overflow-hidden">
+  <div class="container px-5 py-24 mx-auto">
+    <div class="lg:w-4/5 mx-auto flex flex-wrap">
+      <img
+        alt="ecommerce"
+        class="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded"
+        {% if prod.img %}
+        src="/{{prod.img}}"
+        {% else %}
+        src="/static/pexels-_getinspoco_-bibhash-banerjee-1047168.jpg"
+        {% endif %}
+      />
+      <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+        <a href="{% url 'shop:home' pk=prod.shop.id cat=0 %}">
+          <h2 class="text-sm title-font text-gray-500 tracking-widest">
+            Go back to products in {{prod.shop}}
+          </h2>
+        </a>
+        <h1 class="text-gray-700 text-3xl title-font font-medium mb-1">
+          Name: {{prod.name}}
+        </h1>
+        <h3 class="text-gray-600 text-2xl font-medium mb-1">
+          Quantity: {{prod.stock}}
+        </h3>
+        <h3 class="text-gray-600 text-2xl font-medium mb-1">
+          Price: {{prod.price}}
+        </h3>
+        <h3 class="text-gray-600 text-2xl font-medium mb-1">
+          Categories: {{categories}}
+        </h3>
+        {% if request.user == prod.shop.user %}
+        <div class="flex py-6">
+          <form method="POST" id="update_form"
+          enctype="multipart/form-data"
+          >
+            {% csrf_token %} {{ form|crispy }}
+            <button
+              class="flex ml-right text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+              type="submit"
+            >
+              Update
+            </button>
+          </form>
+        </div>
+        {% else %}
+        <a href="{% url 'shop:product_compare' pk=prod.id %}">
+          Compare with other shops</a
+        >
+        {% if request.user.cart.items.all %}
+          {% comment %} {% for it in request.user.cart.items.all %} {% endcomment %}
+          {% if prod in prods %}
+          {% for it in cart_items %}
+              {% if it.product == prod %}
+              <button
+              class="ml-right text-white bg-indigo-500 justify border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+              >
+              <a href = "{% url "shop:item-update" it.id %}">
+                <span class = "cart_quan"> Update Quantity
+                    {{it.quantity}}</span>
+              </a>
+              </button>
+            
+              {% else %}
+              {% endif %}
+          {% endfor %}
+          
+            {% else %}
+            <button
+              class="ml-right text-white bg-indigo-500 justify border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+            >
+            <a href = "{% url "shop:item-create" prod.id %}">
+              <svg class="w-5 h-5 fill-current justify-right" viewBox="0 0 20 20"><path d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
+              Add to cart
+            </a>
+            </button>
+            {% endif %}
+          {% comment %} {% endfor %}  {% endcomment %}
+
+          {% else %}
+          <button
+            class="ml-right text-white bg-indigo-500 justify border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+          >
+          <a href = "{% url "shop:item-create" prod.id %}">
+            <svg class="w-5 h-5 fill-current justify-right" viewBox="0 0 20 20"><path d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
+            Add to cart
+          </a>
+          </button>          
+          {% endif %}
+          <button
+            class="justify-center  ml-right text-white bg-red-600 border-y-200 py-2 px-6 focus:outline-none hover:bg-red-700 rounded"
+            style="float: right"
+          >
+            <a href="#">
+              <span class="mt-1">
+                <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
+                Wish List
+              </span>
+            </a>
+          </button>
+
+
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+<script type="text/javascript">
+  $(document).on('submit', '#update_form',(function (e) {
+      e.preventDefault();
+      $.ajax({ // create an AJAX call...
+        data: $(this).serialize(), // get the form data
+        type: $(this).attr('method'), // GET or POST
+        url: $(this).attr('action'), // the file to call
+        success: function(response) { // on success..
+            $('#success_div').html(response); // update the DIV
+        },
+        error: function(e, x, r) { // on error..
+            $('#error_div').html(e); // update the DIV
+        }
+    });
+  });
+</script>
+{% endblock content %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}{% load tailwind_filters %} {% block content %}
+<section style="background-color:#fffff1; display:flex; width:100%; height:100%;">
+  <div class = "flex flex-wrap">
+    <div >
+      <a href="{% url 'shop:home' pk=request.user.shop.id cat=0 %}">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        Back to Shop Products</a
+      >
+    </div>
+    <div class = "max-w-7xl mx-auto lg:w-4/5 mx-auto">
+      {% for cat in categories %}
+      {% comment %} <div><br>{{cat.name}}:  <br> <a href = "{% url 'shop:category-detail' cat.id %}"><t>View</a></div> {% endcomment %}
+      <div class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex">
+        <div>
+          <a href = "{% url 'shop:category-detail' cat.id %}" class="block p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+            <h5 >{{cat.name}}</h5>
+            <span class="font-normal text-gray-700 dark:text-gray-400">{{cat.products.all.count}} Products in this category.</span>
+          </a>
+        </div>
+        <div>
+          <span class="font-normal text-gray-700 dark:text-gray-400 py-2"><a href = "{% url 'shop:category-delete' cat.id %}">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+          </a></span>
+        </div>
+      </div>
+  
+      {% endfor %}
+    </div>
+  </div>
+  <div class="max-w-7xl mx-auto flex flex-wrap px-3 py-3" style="display:block">
+    <h1 class = "text-3xl font-bold">Add a new category</h1>
+    <hr />
+    <div class="inline-block min-w-full py-2 align-middle">
+      <form method="POST" id="update_form">
+        {% csrf_token %} {{ form|crispy}}
+        <button
+          class="flex ml-right text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+          type="submit"
+        >
+          Add new Category
+        </button>
+      </form>
+    <div>
+  </div>
+</section>
+<hr />
+
+{% endblock %}
