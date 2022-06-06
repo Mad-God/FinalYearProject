@@ -159,14 +159,6 @@ CRISPY_TEMPLATE_PACK = 'tailwind'
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'tailwind'
 
 
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'stmsng2001@gmail.com'
-EMAIL_HOST_PASSWORD = 'nlcldzpaylwwptan'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-
 
 
 # for PHONENUMBERFIELD
